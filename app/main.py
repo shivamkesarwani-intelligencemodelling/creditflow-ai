@@ -18,20 +18,6 @@ app = FastAPI(
 )
 
 
-# @app.get("/")
-# def root():
-#    return {"message": "CreditFlow AI is running 🚀"}
-
-
-# @app.get("/health")
-# def health():
-#    return {
-#        "status": "healthy",
-#        "service": "creditflow-ai",
-#        "version": "0.1.0",
-#    }
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("CreditFlow API starting...")
@@ -43,10 +29,6 @@ app = FastAPI(
     title="CreditFlow AI",
     lifespan=lifespan,
 )
-
-# @app.on_event("startup")
-# async def startup():
-#    logger.info("CreditFlow API started")
 
 
 @app.get("/health")
