@@ -1,8 +1,18 @@
 from fastapi import FastAPI
 from app.core import logger
+from contextlib import asynccontextmanager
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("CreditFlow API starting...")
+    yield
+    logger.info("CreditFlow API shutting down...")
+
 
 app = FastAPI(
     title="CreditFlow AI",
+    lifespan=lifespan,
     version="0.1.0",
     description="Production-grade Credit Risk Decision Platform",
 )
@@ -22,9 +32,21 @@ app = FastAPI(
 #    }
 
 
-@app.on_event("startup")
-async def startup():
-    logger.info("CreditFlow API started")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("CreditFlow API starting...")
+    yield
+    logger.info("CreditFlow API shutting down...")
+
+
+app = FastAPI(
+    title="CreditFlow AI",
+    lifespan=lifespan,
+)
+
+# @app.on_event("startup")
+# async def startup():
+#    logger.info("CreditFlow API started")
 
 
 @app.get("/health")
