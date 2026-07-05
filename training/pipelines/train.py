@@ -5,6 +5,7 @@ import joblib
 from app.core import logger
 from training.models import LogisticRegressionModel
 from training.evaluation import ModelEvaluator
+from app.utils.mlflow_logger import MLflowLogger
 
 
 DATA_DIR = Path("data/processed")
@@ -46,6 +47,19 @@ def main():
     logger.info(
         "F1 Score: %.4f",
         report.f1,
+    )
+
+    mlflow_logger = MLflowLogger()
+
+    mlflow_logger.log_run(
+        model=model,
+        report=report,
+        params={
+            "model": "LogisticRegression",
+            "max_iter": 1000,
+            "random_state": 42,
+        },
+        artifact_path="logistic_regression",
     )
 
 

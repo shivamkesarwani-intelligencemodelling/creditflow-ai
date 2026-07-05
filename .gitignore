@@ -239,3 +239,7 @@ mlruns/
 __pycache__/
 *.pyc
 models/*.joblib
+
+# MLflow
+mlflow.db
+artifacts/
