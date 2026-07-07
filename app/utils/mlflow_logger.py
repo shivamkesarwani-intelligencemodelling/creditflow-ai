@@ -50,6 +50,5 @@ class MLflowLogger:
             )
 
             mlflow.sklearn.log_model(
-                sk_model=model.model,
-                artifact_path=artifact_path,
+                sk_model=model.model, name=model.__class__.__name__
             )

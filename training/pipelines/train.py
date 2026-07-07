@@ -1,14 +1,30 @@
 from pathlib import Path
 
 import joblib
-
+import argparse
 from app.core import logger
-from training.models import LogisticRegressionModel
 from training.evaluation import ModelEvaluator
+from training.models.factory import ModelFactory
 from app.utils.mlflow_logger import MLflowLogger
 
 
 DATA_DIR = Path("data/processed")
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Train a machine learning model.")
+
+    parser.add_argument(
+        "--model",
+        choices=[
+            "logistic_regression",
+            "random_forest",
+        ],
+        default="logistic_regression",
+        help="Model to train",
+    )
+
+    return parser.parse_args()
 
 
 def main():
@@ -17,13 +33,15 @@ def main():
     X_train, y_train = joblib.load(DATA_DIR / "train.joblib")
     X_test, y_test = joblib.load(DATA_DIR / "test.joblib")
 
-    model = LogisticRegressionModel()
+    args = parse_args()
 
-    logger.info("Training Logistic Regression...")
+    model = ModelFactory.create(args.model)
+
+    logger.info(f"Training {model.__class__.__name__}...")
 
     model.train(X_train, y_train)
 
-    model.save("models/logistic.joblib")
+    model.save(f"models/{model.__class__.__name__}.joblib")
 
     logger.info("Training completed.")
 
@@ -55,11 +73,11 @@ def main():
         model=model,
         report=report,
         params={
-            "model": "LogisticRegression",
+            "model": model.__class__.__name__,
             "max_iter": 1000,
             "random_state": 42,
         },
-        artifact_path="logistic_regression",
+        artifact_path=model.__class__.__name__,
     )
 
 
