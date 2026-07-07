@@ -1,224 +1,77 @@
 # CreditFlow AI
 
-An end-to-end MLOps platform for credit default risk prediction using the Home Credit Default Risk dataset. The project demonstrates modern machine learning engineering practices, including data preprocessing, model training, experiment tracking, explainability, monitoring, and production deployment.
+CreditFlow AI is a production-grade machine learning platform for real-time credit risk assessment, inspired by modern fintech lending systems such as Kredivo, Affirm, and Nubank.
 
----
+Unlike traditional ML projects that stop at model training, this project demonstrates the complete lifecycle of deploying and operating machine learning systems in production. It combines machine learning, backend engineering, DevOps, and MLOps to deliver scalable, explainable, and monitored inference services.
 
 ## Features
 
-- FastAPI REST API for real-time credit risk prediction
-- End-to-end data preprocessing pipeline
-- Multiple baseline ML models
-  - Logistic Regression
-  - Random Forest
-  - XGBoost
-- Model Factory pattern for interchangeable models
-- MLflow experiment tracking with SQLite backend
-- Structured logging
-- Dockerized development environment
-- Automated testing with Pytest
-- Code quality with Ruff, Black, and pre-commit
-- Production-ready project architecture
+- Real-time credit risk prediction using FastAPI
+- End-to-end ML pipeline with feature engineering and model training
+- Experiment tracking and model registry using MLflow
+- Explainable AI with SHAP
+- Automated retraining pipelines with Apache Airflow
+- Feature and model drift monitoring using Evidently AI
+- Production monitoring with Prometheus and Grafana
+- PostgreSQL-backed feature storage
+- Dockerized services with Kubernetes deployment
+- CI/CD using GitHub Actions
+- Comprehensive testing and production-ready project architecture
 
----
+## Tech Stack
 
-## Project Structure
+**Machine Learning**
+- Python
+- Scikit-learn
+- XGBoost
+- LightGBM
+- SHAP
 
-```text
-creditflow-ai/
-│
-├── app/
-│   ├── api/
-│   ├── config/
-│   ├── inference/
-│   ├── services/
-│   ├── utils/
-│   └── main.py
-│
-├── training/
-│   ├── data/
-│   ├── feature_engineering/
-│   ├── evaluation/
-│   ├── models/
-│   └── pipelines/
-│
-├── tests/
-├── data/
-├── docker/
-├── airflow/
-├── mlflow/
-├── dashboards/
-└── docs/
-```
+**Backend**
+- FastAPI
+- SQLAlchemy
+- PostgreSQL
 
----
+**MLOps**
+- MLflow
+- Evidently AI
+- Airflow
+
+**DevOps**
+- Docker
+- Kubernetes
+- GitHub Actions
+- Prometheus
+- Grafana
 
 ## System Architecture
 
-```text
-                Client
-                   │
-                   ▼
-            FastAPI REST API
-                   │
-      ┌────────────┼─────────────┐
-      │            │             │
-      ▼            ▼             ▼
-Feature Store   Inference     Explainability
-(PostgreSQL)     Service          (SHAP)
-      │
-      ▼
- Monitoring & Logging
+```mermaid
+flowchart TD
 
-──────────────────────────────────────────
+    A[Client] --> B[FastAPI API]
 
-Training Pipeline
-        │
-        ▼
- Feature Engineering
-        │
-        ▼
- Model Factory
-        │
-        ├──────────────┐
-        │              │
- Logistic Regression   Random Forest
-                       │
-                       ▼
-                    XGBoost
-        │
-        ▼
- Model Evaluation
-        │
-        ▼
- MLflow Tracking
-        │
-        ▼
- Model Registry
+    B --> C[Feature Store<br/>PostgreSQL]
+    B --> D[ML Inference Service]
+    B --> E[SHAP Explainability]
+    B --> F[Monitoring<br/>Prometheus]
+    B --> G[Logging]
+
+    H[Training Pipeline] --> I[MLflow Experiment Tracking]
+    I --> J[Model Registry]
+    J --> K[Deployment]
 ```
 
----
 
-## Technology Stack
+## Project Goals
 
-| Layer | Technology |
-|--------|------------|
-| Language | Python 3.12 |
-| API | FastAPI |
-| ML | Scikit-learn, XGBoost |
-| Experiment Tracking | MLflow |
-| Data Processing | Pandas, NumPy |
-| Model Serialization | Joblib |
-| Containerization | Docker |
-| Testing | Pytest |
-| Formatting | Ruff, Black |
-| Package Management | uv |
+This repository aims to demonstrate software engineering practices expected from Machine Learning Engineers working on production systems:
 
----
+- Designing scalable ML services
+- Building reliable APIs for model serving
+- Automating model training and deployment
+- Monitoring data quality and model performance
+- Implementing explainable AI for financial decision-making
+- Following production-grade software engineering and MLOps best practices
 
-## Implemented Models
-
-| Model | Status |
-|--------|--------|
-| Logistic Regression | ✅ |
-| Random Forest | ✅ |
-| XGBoost | ✅ |
-
----
-
-## Current Metrics
-
-| Model | ROC-AUC | F1 Score |
-|--------|---------|----------|
-| Logistic Regression | *(update after latest run)* | *(update)* |
-| Random Forest | 0.7147 | 0.0028 |
-| XGBoost | **0.7611** | **0.0439** |
-
----
-
-## Running the Project
-
-### Install
-
-```bash
-uv sync
-```
-
-### Run the API
-
-```bash
-uv run uvicorn app.main:app --reload
-```
-
-### Train a Model
-
-```bash
-uv run python -m training.pipelines.train --model logistic_regression
-```
-
-```bash
-uv run python -m training.pipelines.train --model random_forest
-```
-
-```bash
-uv run python -m training.pipelines.train --model xgboost
-```
-
-### Run Tests
-
-```bash
-uv run pytest
-```
-
-### Launch MLflow
-
-```bash
-uv run mlflow server \
-    --backend-store-uri sqlite:///mlflow.db \
-    --default-artifact-root ./artifacts \
-    --host 0.0.0.0 \
-    --port 5000
-```
-
----
-
-## Roadmap
-
-### Milestone 1
-- [x] Backend setup
-- [x] Docker
-- [x] Testing
-- [x] CI-ready structure
-
-### Milestone 2
-- [x] Configuration management
-- [x] Data ingestion
-- [x] Dataset validation
-- [x] Feature engineering
-
-### Milestone 3
-- [x] Logistic Regression
-- [x] Random Forest
-- [x] XGBoost
-- [x] Model Factory
-- [x] MLflow integration
-- [ ] Hyperparameter tuning
-- [ ] Model benchmarking
-
-### Milestone 4
-- [ ] SHAP Explainability
-- [ ] Feature importance
-- [ ] Prediction explanations
-
-### Milestone 5
-- [ ] FastAPI inference service
-- [ ] Model registry
-- [ ] Monitoring
-- [ ] Prometheus metrics
-- [ ] Grafana dashboards
-
----
-
-## License
-
-MIT License
+> **Status:** 🚧 Under active development as a portfolio project showcasing end-to-end Machine Learning Engineering and MLOps capabilities.
