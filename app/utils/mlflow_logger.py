@@ -1,4 +1,7 @@
 import mlflow
+import mlflow.sklearn
+import mlflow.xgboost
+from xgboost import XGBClassifier
 from training.evaluation import EvaluationReport
 
 
@@ -49,6 +52,13 @@ class MLflowLogger:
                 report.roc_auc,
             )
 
-            mlflow.sklearn.log_model(
-                sk_model=model.model, name=model.__class__.__name__
-            )
+            if isinstance(model.model, XGBClassifier):
+                mlflow.xgboost.log_model(
+                    xgb_model=model.model,
+                    name=model.__class__.__name__,
+                )
+            else:
+                mlflow.sklearn.log_model(
+                    sk_model=model.model,
+                    name=model.__class__.__name__,
+                )

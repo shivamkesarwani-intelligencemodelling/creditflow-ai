@@ -19,6 +19,7 @@ def parse_args():
         choices=[
             "logistic_regression",
             "random_forest",
+            "xgboost",
         ],
         default="logistic_regression",
         help="Model to train",
@@ -69,14 +70,13 @@ def main():
 
     mlflow_logger = MLflowLogger()
 
+    params = model.model.get_params()
+    params["model"] = model.__class__.__name__
+
     mlflow_logger.log_run(
         model=model,
         report=report,
-        params={
-            "model": model.__class__.__name__,
-            "max_iter": 1000,
-            "random_state": 42,
-        },
+        params=params,
         artifact_path=model.__class__.__name__,
     )
 
