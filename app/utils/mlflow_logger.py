@@ -1,6 +1,7 @@
 import mlflow
 import mlflow.sklearn
 import mlflow.xgboost
+from pathlib import Path
 from xgboost import XGBClassifier
 from training.evaluation import EvaluationReport
 
@@ -23,6 +24,7 @@ class MLflowLogger:
         report: EvaluationReport,
         params: dict,
         artifact_path: str,
+        plot_paths: list[Path] | None = None,
     ):
         with mlflow.start_run():
             mlflow.log_params(params)
@@ -62,3 +64,7 @@ class MLflowLogger:
                     sk_model=model.model,
                     name=model.__class__.__name__,
                 )
+
+            if plot_paths:
+                for path in plot_paths:
+                    mlflow.log_artifact(path)

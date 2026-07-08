@@ -4,6 +4,7 @@ import joblib
 import argparse
 from app.core import logger
 from training.evaluation import ModelEvaluator
+from training.evaluation.plots import EvaluationPlots
 from training.models.factory import ModelFactory
 from app.utils.mlflow_logger import MLflowLogger
 
@@ -58,15 +59,30 @@ def main():
         probabilities,
     )
 
-    logger.info(
-        "ROC-AUC: %.4f",
-        report.roc_auc,
+    plots = EvaluationPlots()
+
+    confusion_matrix = plots.confusion_matrix(
+        y_test,
+        predictions,
     )
 
-    logger.info(
-        "F1 Score: %.4f",
-        report.f1,
+    roc_curve = plots.roc_curve(
+        y_test,
+        probabilities,
     )
+
+    precision_recall = plots.precision_recall_curve(
+        y_test,
+        probabilities,
+    )
+
+    logger.info("Accuracy: %.4f", report.accuracy)
+    logger.info("Precision: %.4f", report.precision)
+    logger.info("Recall: %.4f", report.recall)
+    logger.info("F1 Score: %.4f", report.f1)
+    logger.info("ROC-AUC: %.4f", report.roc_auc)
+    logger.info("Confusion Matrix: \n%s", report.confusion_matrix)
+    logger.info("Classification Report: \n%s", report.classification_report)
 
     mlflow_logger = MLflowLogger()
 
@@ -78,6 +94,7 @@ def main():
         report=report,
         params=params,
         artifact_path=model.__class__.__name__,
+        plot_paths=[confusion_matrix, roc_curve, precision_recall],
     )
 
 
